@@ -23,7 +23,7 @@ const https_options = {
   /*      ca: fs.readFileSync("/home/admin/conf/web/api.foodbell.co.uk/ssl/api.foodbell.co.uk.ca"),
         key: fs.readFileSync("/home/admin/conf/web/api.foodbell.co.uk/ssl/api.foodbell.co.uk.key"),
         cert: fs.readFileSync("/home/admin/conf/web/api.foodbell.co.uk/ssl/api.foodbell.co.uk.crt"),    
-     */
+     **/
 };
 const http = require("http").Server(app);
 const https = require("https").Server(https_options, app);
