@@ -22,7 +22,7 @@ const options = {
         url: 'http://localhost:3000', // Replace with your server URL
       },
       {
-        url: 'https://smartplatform.liara.run',
+        url: 'http://5.34.195.193:3000',
       }
     ],
   },
