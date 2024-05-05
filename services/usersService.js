@@ -33,6 +33,7 @@ const addNewUser = async (params) => {
       number: params.number,
       password: params.password,
       meta: params.meta,
+      role: params.role,
     });
 
     const salt = await bcrypt.genSalt(10);
