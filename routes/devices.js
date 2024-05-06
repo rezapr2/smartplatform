@@ -6,24 +6,21 @@
  *       type: object
  *       required:
  *         - name
- *         - number
+ *         - meta
  *       properties:
  *         name:
  *           type: string
  *           description: The device name
- *         number:
- *           type: string
- *           description: Phonenumber of the device
- *         status:
- *           type: string
- *           description: The device status
  *         meta:
  *           type: object
  *           description: The device meta
  *       example:
- *         name: "Reza"
- *         number: "09380904517"
- *         status: "active"
+ *         name: "Switch 1"
+ *         deviceType: "66202b25e92bc0e46f21cdf9"
+ *         user: "66202b25e92bc0e46f21cdf9"
+ *         meta: {
+ *           status: "on"
+ *         }
  */
 /**
  * @swagger
@@ -101,11 +98,11 @@
  *         required: true
  *         description: Authentication token for super_admin or user
  *       - in: path
- *         name: deviceId
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
- *         description: Device ID
+ *         description: User ID
  *     responses:
  *       200:
  *         description: Successful operation

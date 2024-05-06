@@ -4,15 +4,9 @@ const addNewDevice= async (req, res) => {
   const params = req.body;
   const response = await devicesService.addNewDevice(params);
 
-  if (response.code !== 200) {
-    res.status(response.code).send(response.data);
-  } else {
-    res.header("x-auth-token", response.token).send({
-      id: response.data._id,
-      name: response.data.firstname,
-      number: response.data.number,
-    });
-  }
+  res.status(response.code).send(response.data);
+
+  
 };
 
 const getDevices = async (req, res) => {
@@ -22,6 +16,7 @@ const getDevices = async (req, res) => {
 };
 
 const getDevicesByUser = async (req, res) => {
+
   const { userId } = req.params;
 
   const response = await devicesService.getDevicesByUser(userId);

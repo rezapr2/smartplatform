@@ -13,13 +13,15 @@ const addNewDevice = async (params) => {
     return {
       success: false,
       code: 400,
-      data: "error.details[0].message",
+      data: error.details[0].message,
     }; 
 
 
   try {
-    device = new Device({
+    const device = new Device({
       name: params.name,
+      deviceType: params.deviceType,
+      user: params.user,
       meta: params.meta,
     });
 

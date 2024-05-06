@@ -30,8 +30,8 @@ const Device = mongoose.model('Device', deviceSchema);
 function validateDevice(device) {
     const schema = Joi.object({
         name: Joi.string().min(3).max(50).required(),
-        deviceType: Joi.string().required,
-        user: Joi.string().required,
+        deviceType: Joi.string().required(),
+        user: Joi.string().required(),
         meta: Joi.object(),
 
     });

@@ -4,15 +4,8 @@ const addNewDeviceType = async (req, res) => {
   const params = req.body;
   const response = await deviceTypesService.addNewDeviceType(params);
 
-  if (response.code !== 200) {
-    res.status(response.code).send(response.data);
-  } else {
-    res.header("x-auth-token", response.token).send({
-      id: response.data._id,
-      name: response.data.firstname,
-      number: response.data.number,
-    });
-  }
+  res.status(response.code).send(response.data);
+
 };
 
 const getDeviceTypes = async (req, res) => {
