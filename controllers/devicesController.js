@@ -65,6 +65,18 @@ const deleteDevice= async (req, res) => {
   res.status(response.code).send(response.data);
 };
 
+const uploadImage = async (req, res) => {
+  const { deviceId, metaKey } = req.params;
+  const imageFile = req.file; // Retrieve the uploaded image file
+
+  const response = await devicesService.uploadImage(
+    deviceId, metaKey, imageFile
+  );
+
+  res.status(response.code).send(response.data);
+  
+}
+
 module.exports = {
   addNewDevice,
   getDevices,
@@ -73,4 +85,5 @@ module.exports = {
   updateDevice,
   deleteDevice,
   updateDeviceMeta,
+  uploadImage
 };

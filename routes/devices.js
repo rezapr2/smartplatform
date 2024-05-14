@@ -257,8 +257,55 @@
  *
  */
 
+/**
+ * @swagger
+ * /api/devices/upload-image/{deviceId}/{metaKey}:
+ *   post:
+ *     summary: Uploads an image and saves its URL to the device meta
+ *     tags: [Devices]
+ *     parameters:
+ *       - in: header
+ *         name: x-auth-token
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Authentication token for super_admin or devices
+ *       - in: path
+ *         name: deviceId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Device ID
+ *       - in: path
+ *         name: metaKey
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: metaKey is key of the meta object in the device 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Image uploaded successfully
+ *       500:
+ *         description: Error occurred while uploading the image
+ *
+ */
+
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+
+
 const superAdmin = require("../middleware/superAdmin");
 const selfUserOrSuperAdmin = require("../middleware/selfUserOrSuperAdmin");
 
@@ -281,6 +328,35 @@ router.put("/:deviceId", superAdmin, devicesController.updateDevice);
 
 /* update device by deviceId */
 router.put("/meta/:deviceId", superAdmin, devicesController.updateDeviceMeta);
+
+/* upload a image to server and update meta by deviceId */
+
+const upload = multer({
+    storage: multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+      },
+      filename: function (req, file, cb) {
+        const timestamp = Date.now();
+        const extension = path.extname(file.originalname);
+        const filename = `${timestamp}${extension}`;
+        cb(null, filename);
+      }
+    }),
+    fileFilter: function (req, file, cb) {
+      const allowedFileTypes = /jpeg|jpg|png|gif/;
+      const mimeType = allowedFileTypes.test(file.mimetype);
+      const extension = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
+  
+      if (mimeType && extension) {
+        cb(null, true);
+      } else {
+        cb(new Error('Invalid file type. Only JPEG, JPG, PNG, and GIF images are allowed.'));
+      }
+    }
+  });
+  
+router.post("/upload-image/:deviceId/:metaKey", selfUserOrSuperAdmin, upload.single('image'), devicesController.uploadImage);
 
 /* delete device by deviceId */
 router.delete("/:deviceId", selfUserOrSuperAdmin, devicesController.deleteDevice);

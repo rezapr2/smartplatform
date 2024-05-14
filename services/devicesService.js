@@ -1,4 +1,5 @@
 const { Device, validate } = require("../models/device");
+require('dotenv').config()
 
 /**
  * Function to add a new device to the system.
@@ -7,15 +8,13 @@ const { Device, validate } = require("../models/device");
  * @return {Object} The result of adding a new device.
  */
 const addNewDevice = async (params) => {
-  
   const { error } = validate(params);
   if (error)
     return {
       success: false,
       code: 400,
       data: error.details[0].message,
-    }; 
-
+    };
 
   try {
     const device = new Device({
@@ -27,14 +26,13 @@ const addNewDevice = async (params) => {
 
     await device.save();
 
-
     return {
       success: true,
       code: 200,
       data: {
         _id: device._id,
         name: device.name,
-        meta: device.meta
+        meta: device.meta,
       },
     };
   } catch (error) {
@@ -98,18 +96,15 @@ const getDevicesByUser = async (userId) => {
       success: true,
       code: 200,
       data: devices,
-    }
-  }
-  catch {
+    };
+  } catch {
     return {
       success: false,
       code: 500,
       data: "Could not find a devices",
     };
   }
-  
-}
-
+};
 
 /**
  * Retrieves a device by their ID from the database.
@@ -195,16 +190,15 @@ const updateDeviceMeta = async (deviceId, key, value) => {
   let device;
 
   try {
-    
     device = await Device.findByIdAndUpdate(
       deviceId,
       {
-        [`meta.${key}`]: value
+        [`meta.${key}`]: value,
       },
       {
         new: true,
       }
-    )
+    );
 
     if (!device) {
       return {
@@ -218,9 +212,8 @@ const updateDeviceMeta = async (deviceId, key, value) => {
       success: true,
       code: 200,
       data: device,
-    }
-  }
-  catch (e) {
+    };
+  } catch (e) {
     console.log(e);
     return {
       success: false,
@@ -228,7 +221,7 @@ const updateDeviceMeta = async (deviceId, key, value) => {
       data: "Could not find a device",
     };
   }
-}
+};
 
 /**
  * Deletes a device by their ID.
@@ -264,6 +257,53 @@ const deleteDevice = async (deviceId) => {
   }
 };
 
+const uploadImage = async (deviceId, metaKey, imageFile) => {
+
+  let device;
+
+  try {
+
+    const imageUrl = `${process.env.apiUrl}/uploads/${imageFile.filename}`;
+
+    device = await Device.findByIdAndUpdate(
+      deviceId,
+      {
+        [`meta.${metaKey}`]: imageUrl,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!device) {
+      return {
+        success: false,
+        code: 500,
+        data: "Could not find a device",
+      };
+    }
+
+    console.log("Image URL saved to the database:", imageUrl);
+
+    // Send a success response
+    return {
+      success: true,
+      code: 200,
+      data: device,
+    }; 
+
+  } catch (error) {
+    console.error("Error saving image URL to the database:", error);
+
+    // Send an error response
+    return {
+      success: false,
+      code: 500,
+      data: "Error saving image",
+    }; 
+  }
+};
+
 module.exports = {
   addNewDevice,
   getDevices,
@@ -272,5 +312,5 @@ module.exports = {
   updateDevice,
   deleteDevice,
   updateDeviceMeta,
-
+  uploadImage,
 };

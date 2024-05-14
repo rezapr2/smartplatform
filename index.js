@@ -7,17 +7,18 @@ const users = require("./routes/users");
 const deviceTypes = require("./routes/deviceTypes");
 const devices = require("./routes/devices");
 const messages = require("./routes/messages");
+const path = require('path')
 
 const app = express();
 
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/SmartPlatform", {
-    useNewUrlParser: true,
-  })
+  .connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/SmartPlatform")
   .then(() => console.log("Connected to MongoDB..."))
   .catch((err) => console.error(err));
 
 app.use(express.json());
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const https_options = {
   /*      ca: fs.readFileSync("/home/admin/conf/web/api.foodbell.co.uk/ssl/api.foodbell.co.uk.ca"),
