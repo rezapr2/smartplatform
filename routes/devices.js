@@ -336,6 +336,8 @@ const upload = multer({
       destination: function (req, file, cb) {
         cb(null, 'uploads/');
       },
+/*************  ✨ Codeium Command ⭐  *************/
+/******  7b01d362-e8dd-42af-9b4d-f861e9541132  *******/
       filename: function (req, file, cb) {
         const timestamp = Date.now();
         const extension = path.extname(file.originalname);
